@@ -1,4 +1,4 @@
-import { WalkerState } from "../types";
+import { WalkerState } from "../types.js";
 
 type OnQueueEmptyCallback = (error: Error | null, output: WalkerState) => void;
 /**

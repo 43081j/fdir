@@ -1,4 +1,4 @@
-import { Options } from "../../types";
+import { Options } from "../../types.js";
 
 export type GetArrayFunction = (paths: string[]) => string[];
 

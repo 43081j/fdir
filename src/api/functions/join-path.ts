@@ -1,6 +1,6 @@
 import { relative } from "path";
-import { Options, PathSeparator } from "../../types";
-import { convertSlashes } from "../../utils";
+import { Options, PathSeparator } from "../../types.js";
+import { convertSlashes } from "../../utils.js";
 
 export function joinPathWithBasePath(filename: string, directoryPath: string) {
   return directoryPath + filename;

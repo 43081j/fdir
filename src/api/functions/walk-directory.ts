@@ -1,4 +1,4 @@
-import { WalkerState } from "../../types";
+import { WalkerState } from "../../types.js";
 import fs from "fs";
 
 export type WalkDirectoryFunction = (

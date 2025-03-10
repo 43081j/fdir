@@ -1,18 +1,18 @@
 import { basename, dirname } from "path";
-import { normalizePath } from "../utils";
-import { ResultCallback, WalkerState, Options } from "../types";
-import * as joinPath from "./functions/join-path";
-import * as pushDirectory from "./functions/push-directory";
-import * as pushFile from "./functions/push-file";
-import * as getArray from "./functions/get-array";
-import * as groupFiles from "./functions/group-files";
-import * as resolveSymlink from "./functions/resolve-symlink";
-import * as invokeCallback from "./functions/invoke-callback";
-import * as walkDirectory from "./functions/walk-directory";
-import { Queue } from "./queue";
+import { normalizePath } from "../utils.js";
+import { ResultCallback, WalkerState, Options } from "../types.js";
+import * as joinPath from "./functions/join-path.js";
+import * as pushDirectory from "./functions/push-directory.js";
+import * as pushFile from "./functions/push-file.js";
+import * as getArray from "./functions/get-array.js";
+import * as groupFiles from "./functions/group-files.js";
+import * as resolveSymlink from "./functions/resolve-symlink.js";
+import * as invokeCallback from "./functions/invoke-callback.js";
+import * as walkDirectory from "./functions/walk-directory.js";
+import { Queue } from "./queue.js";
 import { Dirent } from "fs";
-import { Output } from "../types";
-import { Counter } from "./counter";
+import { Output } from "../types.js";
+import { Counter } from "./counter.js";
 
 export class Walker<TOutput extends Output> {
   private readonly root: string;

@@ -1,4 +1,4 @@
-import { FilterPredicate, Options, Counts } from "../../types";
+import { FilterPredicate, Options, Counts } from "../../types.js";
 
 export type PushFileFunction = (
   directoryPath: string,

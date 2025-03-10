@@ -1,4 +1,4 @@
-import { Group, Options } from "../../types";
+import { Group, Options } from "../../types.js";
 
 export type GroupFilesFunction = (
   groups: Group[],

@@ -1,5 +1,5 @@
 import fs from "fs";
-import { WalkerState, Options } from "../../types";
+import { WalkerState, Options } from "../../types.js";
 import { dirname } from "path";
 
 export type ResolveSymlinkFunction = (

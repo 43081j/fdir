@@ -1,4 +1,4 @@
-import { Queue } from "./api/queue";
+import { Queue } from "./api/queue.js";
 
 export type Counts = {
   files: number;

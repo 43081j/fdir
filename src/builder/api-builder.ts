@@ -1,6 +1,6 @@
-import { callback, promise } from "../api/async";
-import { sync } from "../api/sync";
-import { Options, Output, ResultCallback } from "../types";
+import { callback, promise } from "../api/async.js";
+import { sync } from "../api/sync.js";
+import { Options, Output, ResultCallback } from "../types.js";
 
 export class APIBuilder<TReturnType extends Output> {
   constructor(

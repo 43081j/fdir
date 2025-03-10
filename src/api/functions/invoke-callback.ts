@@ -6,7 +6,7 @@ import {
   ResultCallback,
   WalkerState,
   Options,
-} from "../../types";
+} from "../../types.js";
 
 export type InvokeCallbackFunction<TOutput extends Output> = (
   state: WalkerState,

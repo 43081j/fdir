@@ -9,8 +9,8 @@ import {
   ExcludePredicate,
   GlobFunction,
   GlobParams,
-} from "../types";
-import { APIBuilder } from "./api-builder";
+} from "../types.js";
+import { APIBuilder } from "./api-builder.js";
 import type picomatch from "picomatch";
 import type { Matcher, PicomatchOptions } from "picomatch";
 

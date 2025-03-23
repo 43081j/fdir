@@ -1,8 +1,16 @@
-import { afterAll, beforeAll, beforeEach, describe, test } from "vitest";
+import { afterAll, beforeAll, describe, test, beforeEach, afterEach } from "vitest";
 import { apiTypes, normalize, root } from "./utils";
 import mock from "mock-fs";
+import type Directory from "mock-fs/lib/directory";
 import { fdir, Options } from "../src";
 import path from "path";
+
+const purgeMockFs = () => {
+  const root = mock.getMockRoot() as Directory;
+  for (const file of root.list()) {
+    root.removeItem(file);
+  }
+};
 
 const fsWithRelativeSymlinks = {
   "../../sym-relative/linked": {
@@ -139,6 +147,7 @@ for (const type of apiTypes) {
     });
 
     afterAll(() => {
+      purgeMockFs();
       mock.restore();
     });
 
@@ -362,6 +371,33 @@ for (const type of apiTypes) {
       const api = new fdir({ excludeSymlinks: true }).crawl("/some/dir");
       const files = await api[type]();
       t.expect(files).toHaveLength(0);
+    });
+  });
+
+  describe(`[${type}] serial tests`, () => {
+    afterEach(() => {
+      purgeMockFs();
+      mock.restore();
+    });
+
+    test(`resolve symlinks with root as /`, async (t) => {
+      mock({
+        "/sym/linked": {
+          "file-1": "file contents",
+        },
+        "/some/dir": {
+          dirSymlink: mock.symlink({
+            path: "/sym/linked",
+          }),
+        },
+      });
+      const api = new fdir().withSymlinks().crawl("/");
+      const files = await api[type]();
+      t.expect(files.sort()).toStrictEqual(
+        normalize([
+          "/sym/linked/file-1",
+        ])
+      );
     });
   });
 }

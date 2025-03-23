@@ -37,7 +37,7 @@ export class Walker<TOutput extends Output> {
 
     this.root = normalizePath(root, options);
     this.state = {
-      root: this.root.slice(0, -1),
+      root: this.root === '/' ? this.root : this.root.slice(0, -1),
       // Perf: we explicitly tell the compiler to optimize for String arrays
       paths: [""].slice(0, 0),
       groups: [],
@@ -111,14 +111,17 @@ export class Walker<TOutput extends Output> {
           directoryPath,
           this.state.options.pathSeparator
         );
+        if (isRecursive(path, path, this.state)) continue;
         if (exclude && exclude(entry.name, path)) continue;
-        this.walkDirectory(this.state, path, path, depth - 1, this.walk);
+        this.walkDirectory(
+          this.state, path, normalizePath(path, this.state.options), depth - 1, this.walk);
       } else if (entry.isSymbolicLink() && this.resolveSymlink) {
         let path = joinPath.joinPathWithBasePath(entry.name, directoryPath);
         this.resolveSymlink(path, this.state, (stat, resolvedPath) => {
           if (stat.isDirectory()) {
             resolvedPath = normalizePath(resolvedPath, this.state.options);
             if (exclude && exclude(entry.name, useRealPaths ? resolvedPath : path + pathSeparator)) return;
+            if (isRecursive(path, resolvedPath, this.state)) return;
 
             this.walkDirectory(
               this.state,
@@ -143,4 +146,34 @@ export class Walker<TOutput extends Output> {
 
     this.groupFiles(this.state.groups, directoryPath, files);
   };
+}
+
+function isRecursive(path: string, resolved: string, state: WalkerState) {
+  if (state.options.useRealPaths)
+    return isRecursiveUsingRealPaths(resolved, state);
+
+  let parent = dirname(path);
+  let depth = 1;
+  // TODO (43081j): sort out this inconsistency around roots
+  // when root is empty, it is actually `.` but we threw the information
+  // away in `normalizePath`.
+  // So here we're normalizing the normalized path?
+  const root = state.root === '' ? '.' : state.root;
+
+  while (parent !== root && depth < 2) {
+    const resolvedPath = state.symlinks.get(parent);
+    const isSameRoot =
+      !!resolvedPath &&
+      (resolvedPath === resolved ||
+        resolvedPath.startsWith(resolved) ||
+        resolved.startsWith(resolvedPath));
+    if (isSameRoot) depth++;
+    else parent = dirname(parent);
+  }
+  state.symlinks.set(path, resolved);
+  return depth > 1;
+}
+
+function isRecursiveUsingRealPaths(resolved: string, state: WalkerState) {
+  return state.visited.includes(resolved);
 }
